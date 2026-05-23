@@ -4,24 +4,11 @@ import { ArrowLeft, Info, ShoppingCart, Tag, Users } from "lucide-react";
 import ProductNavbar from "../components/ProductNavbar.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 import { useCart } from "../context/CartContext.jsx";
-
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+import { API_BASE_URL, toAbsoluteUrl } from "../lib/apiBase.js";
 
 function formatMoney(value) {
   const num = Number(value || 0);
   return Number.isFinite(num) ? `Rs ${num.toFixed(2)}` : "Rs0.00";
-}
-
-function toAbsoluteUrl(value) {
-  if (!value) {
-    return "/vite.svg";
-  }
-
-  if (/^https?:\/\//i.test(value) || value.startsWith("data:")) {
-    return value;
-  }
-
-  return `${API_BASE_URL}${value.startsWith("/") ? "" : "/"}${value}`;
 }
 
 function ProductDetail() {

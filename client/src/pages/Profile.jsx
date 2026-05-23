@@ -4,8 +4,7 @@ import ProductNavbar from "../components/ProductNavbar.jsx";
 import SideBar from "../components/SideBar.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 import { useCart } from "../context/CartContext.jsx";
-
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+import { API_BASE_URL, toAbsoluteUrl } from "../lib/apiBase.js";
 const MAX_PROFILE_IMAGE_SIZE = 2 * 1024 * 1024;
 const customerSidebarItems = [
   { id: "profile", label: "Profile" },
@@ -28,18 +27,6 @@ function readFileAsDataUrl(file) {
     reader.onerror = () => reject(new Error("Failed to read image"));
     reader.readAsDataURL(file);
   });
-}
-
-function toAbsoluteUrl(value) {
-  if (!value) {
-    return "";
-  }
-
-  if (/^https?:\/\//i.test(value) || value.startsWith("data:")) {
-    return value;
-  }
-
-  return `${API_BASE_URL}${value.startsWith("/") ? "" : "/"}${value}`;
 }
 
 function Profile() {

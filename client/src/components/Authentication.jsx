@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useAuth } from "../context/AuthContext.jsx";
-
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+import { API_BASE_URL } from "../lib/apiBase.js";
 
 function Authentication({ onSuccess }) {
   const { setAuthSession } = useAuth();

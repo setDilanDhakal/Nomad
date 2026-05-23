@@ -1,8 +1,8 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useAuth } from "./AuthContext.jsx";
+import { API_BASE_URL } from "../lib/apiBase.js";
 
 const CartContext = createContext(null);
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 const getStoredValue = (key, fallback) => {
   if (typeof window === "undefined") {
