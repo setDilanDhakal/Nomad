@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { createPortal } from "react-dom";
 import Authentication from "./Authentication.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 import { useCart } from "../context/CartContext.jsx";
@@ -95,20 +96,23 @@ function ProductCard({ product }) {
         </div>
       </Link>
 
-      {showAuth ? (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm">
-          <div className="relative w-full max-w-md rounded-3xl bg-[#f7f4ee] p-6 shadow-2xl">
-            <button
-              type="button"
-              onClick={() => setShowAuth(false)}
-              className="absolute right-4 top-4 rounded-full border border-black/10 px-3 py-1 text-sm text-black transition-colors hover:bg-black/5"
-            >
-              Close
-            </button>
-            <Authentication onSuccess={() => setShowAuth(false)} />
-          </div>
-        </div>
-      ) : null}
+      {showAuth && typeof document !== "undefined"
+        ? createPortal(
+            <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm">
+              <div className="relative w-full max-w-md rounded-3xl bg-[#f7f4ee] p-6 shadow-2xl">
+                <button
+                  type="button"
+                  onClick={() => setShowAuth(false)}
+                  className="absolute right-4 top-4 rounded-full border border-black/10 px-3 py-1 text-sm text-black transition-colors hover:bg-black/5"
+                >
+                  Close
+                </button>
+                <Authentication onSuccess={() => setShowAuth(false)} />
+              </div>
+            </div>,
+            document.body
+          )
+        : null}
     </div>
   );
 }
