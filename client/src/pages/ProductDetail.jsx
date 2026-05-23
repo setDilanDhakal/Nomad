@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, Info, ShoppingCart, Tag, Users } from "lucide-react";
 import ProductNavbar from "../components/ProductNavbar.jsx";
+import Authentication from "../components/Authentication.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 import { useCart } from "../context/CartContext.jsx";
 import { API_BASE_URL, toAbsoluteUrl } from "../lib/apiBase.js";
@@ -21,6 +22,7 @@ function ProductDetail() {
   const [actionError, setActionError] = useState("");
   const [actionSuccess, setActionSuccess] = useState("");
   const [adding, setAdding] = useState(false);
+  const [showAuth, setShowAuth] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -248,6 +250,12 @@ function ProductDetail() {
                   type="button"
                   disabled={adding || Boolean(user?.isAdmin)}
                   onClick={async () => {
+                    if (!user) {
+                      setActionError("");
+                      setActionSuccess("");
+                      setShowAuth(true);
+                      return;
+                    }
                     if (user?.isAdmin) {
                       setActionError("Admins cannot use cart");
                       setActionSuccess("");
@@ -305,6 +313,21 @@ function ProductDetail() {
         </div>
       </div>
       </div>
+
+      {showAuth ? (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm">
+          <div className="relative w-full max-w-md rounded-3xl bg-[#f7f4ee] p-6 shadow-2xl">
+            <button
+              type="button"
+              onClick={() => setShowAuth(false)}
+              className="absolute right-4 top-4 rounded-full border border-black/10 px-3 py-1 text-sm text-black transition-colors hover:bg-black/5"
+            >
+              Close
+            </button>
+            <Authentication onSuccess={() => setShowAuth(false)} />
+          </div>
+        </div>
+      ) : null}
     </>
   );
 }
