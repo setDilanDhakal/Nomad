@@ -11,13 +11,36 @@ const app = express();
 
 dotenv.config({ path: "./.env" });
 
-app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "https://nomad-zom9cl26p-dilans-projects-c326c94c.vercel.app"
-  ],
-  credentials: true
-}));
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://nomad-mu.vercel.app",
+  "https://nomad-zom9cl26p-dilans-projects-c326c94c.vercel.app",
+  process.env.CLIENT_URL,
+  ...(process.env.FRONTEND_URLS || "")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean),
+];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      const isExplicitlyAllowed = allowedOrigins.includes(origin);
+      const isVercelPreview = /^https:\/\/nomad(?:-[a-z0-9-]+)?\.vercel\.app$/i.test(origin);
+
+      if (isExplicitlyAllowed || isVercelPreview) {
+        return callback(null, true);
+      }
+
+      return callback(new Error("Not allowed by CORS"));
+    },
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
